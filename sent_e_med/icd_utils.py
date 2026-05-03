@@ -4,7 +4,7 @@ icd_utils.py
 ICD code utilities:
   - Load text descriptions from MIMIC-IV d_icd_diagnoses.csv
   - Normalize ICD codes (remove dots, strip whitespace)
-  - Condition code matchers for SUD, OUD, Diabetes (Table 3 of paper)
+  - Condition code matchers for SUD, OUD, Diabetes
 
 MIMIC-IV note:
   Codes in diagnoses_icd.csv are stored WITHOUT dots.
