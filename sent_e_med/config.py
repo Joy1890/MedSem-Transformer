@@ -1,18 +1,15 @@
 """
 config.py
 =========
-SenteMedConfig — all hyperparameters for Sent-e-Med.
-
-Values come directly from the paper:
-  Section 4.2  — architecture design choices
-  Section 7.2  — implementation details (hidden_dim=384, 4 layers, 4 heads,
-                 linear_dim=64, max_seq_len=128, lr=1e-5, AdamW)
+Implementation details 
+  hidden_dim=384, 4 layers, 4 heads,
+  linear_dim=64, max_seq_len=128, lr=1e-5, AdamW)
 
 Variants supported:
-  encoder_type = "sbert"              — original paper (all-MiniLM-L6-v2, 384-dim)
+  encoder_type = "sbert"              — all-MiniLM-L6-v2, 384-dim
   encoder_type = "bio_clinical_bert"  — Bio_ClinicalBERT (768-dim, projected to hidden_dim)
 
-  masking_strategy = "code"   — original paper: mask individual ICD codes
+  masking_strategy = "code"   — mask individual ICD codes
   masking_strategy = "visit"  — variant: mask entire visits at once
 
   use_phecode = True           — enable PheCode dual-embedding (extension)
@@ -25,13 +22,12 @@ from dataclasses import dataclass, field
 @dataclass
 class SenteMedConfig:
     # ── Encoder type ────────────────────────────────────────────────────────
-    # "sbert"             : original paper — sentence-transformers all-MiniLM-L6-v2
+    # "sbert"             :  all-MiniLM-L6-v2
     # "bio_clinical_bert" : variant — emilyalsentzer/Bio_ClinicalBERT (CLS token)
     encoder_type: str = "sbert"
 
     # ── SBERT (used when encoder_type="sbert") ───────────────────────────────
     # "all-MiniLM-L6-v2" produces 384-dim embeddings, matching hidden_dim.
-    # The paper uses SBERT trained with Siamese networks + Triplet loss [38].
     sbert_model_name: str = "all-MiniLM-L6-v2"
 
     # ── Bio_ClinicalBERT (used when encoder_type="bio_clinical_bert") ────────
@@ -40,8 +36,7 @@ class SenteMedConfig:
     bio_clinical_bert_model: str = "emilyalsentzer/Bio_ClinicalBERT"
 
     # ── Transformer (Section 7.2) ────────────────────────────────────────────
-    # "we used 4 hidden layers, 4 attention heads, and a hidden dimension
-    #  of 384 (matching the size of the embedding returned by SBERT)"
+    # 4 hidden layers, 4 attention heads, and a hidden dimension of 384
     # For Bio_ClinicalBERT variant, keep hidden_dim=384 and project 768→384.
     hidden_dim: int = 384
     num_layers: int = 4
@@ -50,7 +45,7 @@ class SenteMedConfig:
     dropout: float = 0.1
 
     # ── Masking strategy ─────────────────────────────────────────────────────
-    # "code"  : original paper — randomly mask individual ICD codes (15%)
+    # "code"  : randomly mask individual ICD codes (15%)
     # "visit" : variant — randomly mask entire visits (15% of visits);
     #           all codes within a masked visit are replaced with [MASK]
     masking_strategy: str = "code"
