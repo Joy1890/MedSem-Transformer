@@ -1,11 +1,9 @@
 """
 finetune.py
 ===========
-Fine-tuning and evaluation for Sent-e-Med binary risk prediction.
-
-Setup matches Section 5.1 and Section 7.2 of the paper:
+Fine-tuning and evaluation for binary risk prediction.
   - Metrics: ROC AUC and Precision-Recall AUC (PR AUC)
-  - 5 independent runs, report mean ± std  (Table 4)
+  - 5 independent runs, report mean ± std  
   - Loss: binary cross-entropy
   - Imbalanced data → WeightedRandomSampler to balance batches
   - Best checkpoint per run selected by validation ROC AUC
@@ -204,7 +202,7 @@ def _evaluate(model: nn.Module, loader: DataLoader, device: str) -> Dict[str, fl
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Multi-run fine-tuning (as per Table 4: "average over 5 runs")
+# Multi-run fine-tuning
 # ─────────────────────────────────────────────────────────────────────────────
 
 def finetune(
@@ -220,9 +218,6 @@ def finetune(
 ) -> Dict:
     """
     Run n_runs independent fine-tuning experiments and report mean ± std.
-
-    This mirrors the paper's evaluation protocol (Table 4):
-    "The results depict the average performances across 5 different runs."
 
     Args:
         model:          Pretrained SenteMed (weights are NOT modified in-place;
