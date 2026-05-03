@@ -1,9 +1,7 @@
 """
 model.py
 ========
-Full Sent-e-Med architecture (Section 4.2 + Section 7.2 of the paper).
-
-Architecture overview (Figure 3):
+Full architecture
 
     ICD codes  ──► text descriptions ──► SBERT ──► sentence embeddings (FROZEN)
                                                          │
@@ -19,14 +17,14 @@ Architecture overview (Figure 3):
                    MLM head          Next Visit Pred. head      Classification head
                 (per-token)            (avg pool → FC)          (avg pool → FC → sigmoid)
 
-Key design choices (paper):
+Key design:
   1. No [CLS] or [SEP] tokens (unlike vanilla BERT)
   2. No positional encodings (unlike vanilla BERT)
   3. SBERT embeddings are FROZEN — visit embeddings are the only learned code-level params
   4. [MASK] positions use a LEARNABLE embedding (not SBERT, since SBERT is frozen)
   5. Hidden dim = 384 matches SBERT "all-MiniLM-L6-v2" output exactly
 
-Implementation details (Section 7.2):
+Implementation details
   hidden_dim=384, num_layers=4, num_heads=4, ffn_dim=1536,
   linear_dim=64, max_seq_len=128, lr=1e-5, AdamW weight decay
 """
@@ -44,8 +42,7 @@ from .dataset import MASK_TOKEN_ID
 
 class SenteMed(nn.Module):
     """
-    Sent-e-Med: BERT-style EHR encoder using frozen SBERT code embeddings.
-
+    BERT-style EHR encoder using frozen SBERT code embeddings.
     Usage:
         # Pretraining
         losses = model.pretrain_step(code_ids, visit_ids, attention_mask,
