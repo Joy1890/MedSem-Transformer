@@ -4,7 +4,7 @@ main.py
 Entry point for training and evaluating Sent-e-Med on MIMIC-IV.
 
 Usage:
-    # Original paper: SBERT encoder + code-level masking
+    # SBERT encoder + code-level masking
     python main.py --mimic_dir data/mimic-iv
 
     # Variant 1: Bio_ClinicalBERT encoder (768-dim → projected to 384)
@@ -27,10 +27,6 @@ Usage:
 
     # Specify GPU
     python main.py --mimic_dir data/mimic-iv --device cuda:0
-
-NOTE on output naming:
-    Models and embeddings are saved with the encoder type in the filename so
-    that different variants don't overwrite each other's checkpoints.
 
 Expected MIMIC-IV directory layout:
     data/mimic-iv/
