@@ -1,0 +1,212 @@
+Loading MIMIC-IV data …
+Loading admissions.csv …
+  431,231 admissions, 180,733 patients
+Loading diagnoses_icd.csv …
+  4,756,326 diagnosis records
+Building patient visit sequences …
+  79,393 patients with ≥2 visits | avg 4.2 visits/patient | avg 48.6 codes/patient
+Loaded 109,775 ICD descriptions from /home/hy434/project/LLM_project_code/hosp/d_icd_diagnoses.csv
+Vocabulary size: 23,410 unique ICD codes
+Patient split — pretrain: 55,575 | val: 15,878 | test: 7,940
+Loaded SBERT embeddings: (23410, 384)
+
+=================================================================
+Condition: SUD
+=================================================================
+SUD dataset — cases: 2,340, controls: 19,559, skipped (condition at visit 0): 1,919, total: 21,899
+
+── boc_lr ──
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 1/5  ROC-AUC=0.7022  PR-AUC=0.2069
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 2/5  ROC-AUC=0.6775  PR-AUC=0.1896
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 3/5  ROC-AUC=0.6866  PR-AUC=0.1967
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 4/5  ROC-AUC=0.6880  PR-AUC=0.1991
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 5/5  ROC-AUC=0.6680  PR-AUC=0.1973
+  → ROC-AUC: 0.6845±0.0114  PR-AUC: 0.1979±0.0055
+Saved → /home/hy434/project/LLM_project_code/outputs/SUD_boc_lr_results.pkl
+
+── boc_rf ──
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 1/5  ROC-AUC=0.8220  PR-AUC=0.4118
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 2/5  ROC-AUC=0.8164  PR-AUC=0.4254
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 3/5  ROC-AUC=0.8178  PR-AUC=0.4482
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 4/5  ROC-AUC=0.8066  PR-AUC=0.4074
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 5/5  ROC-AUC=0.8115  PR-AUC=0.4072
+  → ROC-AUC: 0.8148±0.0053  PR-AUC: 0.4200±0.0156
+Saved → /home/hy434/project/LLM_project_code/outputs/SUD_boc_rf_results.pkl
+
+── sbert_mean_lr ──
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 1/5  ROC-AUC=0.7437  PR-AUC=0.3340
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 2/5  ROC-AUC=0.7779  PR-AUC=0.4032
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 3/5  ROC-AUC=0.7761  PR-AUC=0.4052
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 4/5  ROC-AUC=0.7776  PR-AUC=0.3873
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 5/5  ROC-AUC=0.7690  PR-AUC=0.3586
+  → ROC-AUC: 0.7689±0.0130  PR-AUC: 0.3777±0.0275
+Saved → /home/hy434/project/LLM_project_code/outputs/SUD_sbert_mean_lr_results.pkl
+
+── sbert_mean_rf ──
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 1/5  ROC-AUC=0.7984  PR-AUC=0.3441
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 2/5  ROC-AUC=0.7912  PR-AUC=0.3790
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 3/5  ROC-AUC=0.7920  PR-AUC=0.3832
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 4/5  ROC-AUC=0.7878  PR-AUC=0.3817
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+  Run 5/5  ROC-AUC=0.7872  PR-AUC=0.3645
+  → ROC-AUC: 0.7913±0.0040  PR-AUC: 0.3705±0.0148
+Saved → /home/hy434/project/LLM_project_code/outputs/SUD_sbert_mean_rf_results.pkl
+
+=================================================================
+Condition: OUD
+=================================================================
+OUD dataset — cases: 577, controls: 22,829, skipped (condition at visit 0): 412, total: 23,406
+
+── boc_lr ──
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 1/5  ROC-AUC=0.7638  PR-AUC=0.0999
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 2/5  ROC-AUC=0.7692  PR-AUC=0.1182
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 3/5  ROC-AUC=0.7331  PR-AUC=0.1431
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 4/5  ROC-AUC=0.7185  PR-AUC=0.1119
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 5/5  ROC-AUC=0.6815  PR-AUC=0.0973
+  → ROC-AUC: 0.7332±0.0320  PR-AUC: 0.1141±0.0164
+Saved → /home/hy434/project/LLM_project_code/outputs/OUD_boc_lr_results.pkl
+
+── boc_rf ──
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 1/5  ROC-AUC=0.8846  PR-AUC=0.2222
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 2/5  ROC-AUC=0.8684  PR-AUC=0.1592
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 3/5  ROC-AUC=0.8753  PR-AUC=0.2156
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 4/5  ROC-AUC=0.8938  PR-AUC=0.3276
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 5/5  ROC-AUC=0.8718  PR-AUC=0.2294
+  → ROC-AUC: 0.8788±0.0092  PR-AUC: 0.2308±0.0544
+Saved → /home/hy434/project/LLM_project_code/outputs/OUD_boc_rf_results.pkl
+
+── sbert_mean_lr ──
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 1/5  ROC-AUC=0.8420  PR-AUC=0.1802
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 2/5  ROC-AUC=0.8302  PR-AUC=0.1630
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 3/5  ROC-AUC=0.8545  PR-AUC=0.2168
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 4/5  ROC-AUC=0.8398  PR-AUC=0.2489
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 5/5  ROC-AUC=0.8366  PR-AUC=0.2189
+  → ROC-AUC: 0.8406±0.0080  PR-AUC: 0.2056±0.0304
+Saved → /home/hy434/project/LLM_project_code/outputs/OUD_sbert_mean_lr_results.pkl
+
+── sbert_mean_rf ──
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 1/5  ROC-AUC=0.8527  PR-AUC=0.1815
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 2/5  ROC-AUC=0.8656  PR-AUC=0.1353
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 3/5  ROC-AUC=0.8506  PR-AUC=0.1743
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 4/5  ROC-AUC=0.8448  PR-AUC=0.1778
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+  Run 5/5  ROC-AUC=0.8291  PR-AUC=0.1633
+  → ROC-AUC: 0.8486±0.0119  PR-AUC: 0.1664±0.0167
+Saved → /home/hy434/project/LLM_project_code/outputs/OUD_sbert_mean_rf_results.pkl
+
+=================================================================
+Condition: Diabetes
+=================================================================
+Diabetes dataset — cases: 1,355, controls: 17,483, skipped (condition at visit 0): 4,980, total: 18,838
+
+── boc_lr ──
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 1/5  ROC-AUC=0.6796  PR-AUC=0.1495
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 2/5  ROC-AUC=0.6971  PR-AUC=0.1647
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 3/5  ROC-AUC=0.6571  PR-AUC=0.1472
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 4/5  ROC-AUC=0.6977  PR-AUC=0.1714
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 5/5  ROC-AUC=0.7010  PR-AUC=0.1590
+  → ROC-AUC: 0.6865±0.0165  PR-AUC: 0.1583±0.0091
+Saved → /home/hy434/project/LLM_project_code/outputs/Diabetes_boc_lr_results.pkl
+
+── boc_rf ──
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 1/5  ROC-AUC=0.7829  PR-AUC=0.2916
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 2/5  ROC-AUC=0.7751  PR-AUC=0.2675
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 3/5  ROC-AUC=0.7804  PR-AUC=0.2543
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 4/5  ROC-AUC=0.7701  PR-AUC=0.2771
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 5/5  ROC-AUC=0.7514  PR-AUC=0.2393
+  → ROC-AUC: 0.7720±0.0112  PR-AUC: 0.2660±0.0181
+Saved → /home/hy434/project/LLM_project_code/outputs/Diabetes_boc_rf_results.pkl
+
+── sbert_mean_lr ──
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 1/5  ROC-AUC=0.7038  PR-AUC=0.2003
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 2/5  ROC-AUC=0.6997  PR-AUC=0.2273
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 3/5  ROC-AUC=0.7457  PR-AUC=0.2178
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 4/5  ROC-AUC=0.7312  PR-AUC=0.2124
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 5/5  ROC-AUC=0.7274  PR-AUC=0.2057
+  → ROC-AUC: 0.7216±0.0174  PR-AUC: 0.2127±0.0094
+Saved → /home/hy434/project/LLM_project_code/outputs/Diabetes_sbert_mean_lr_results.pkl
+
+── sbert_mean_rf ──
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 1/5  ROC-AUC=0.7290  PR-AUC=0.2089
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 2/5  ROC-AUC=0.7276  PR-AUC=0.2018
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 3/5  ROC-AUC=0.7675  PR-AUC=0.1872
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 4/5  ROC-AUC=0.7279  PR-AUC=0.1841
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+  Run 5/5  ROC-AUC=0.7552  PR-AUC=0.2129
+  → ROC-AUC: 0.7414±0.0167  PR-AUC: 0.1990±0.0115
+Saved → /home/hy434/project/LLM_project_code/outputs/Diabetes_sbert_mean_rf_results.pkl
+
+=================================================================
+SUMMARY — Traditional ML Baselines
+=================================================================
+Baseline             Condition         ROC-AUC       PR-AUC
+────────────────────────────────────────────────────────────
+boc_lr               SUD          0.6845±0.0114  0.1979±0.0055
+boc_rf               SUD          0.8148±0.0053  0.4200±0.0156
+sbert_mean_lr        SUD          0.7689±0.0130  0.3777±0.0275
+sbert_mean_rf        SUD          0.7913±0.0040  0.3705±0.0148
+boc_lr               OUD          0.7332±0.0320  0.1141±0.0164
+boc_rf               OUD          0.8788±0.0092  0.2308±0.0544
+sbert_mean_lr        OUD          0.8406±0.0080  0.2056±0.0304
+sbert_mean_rf        OUD          0.8486±0.0119  0.1664±0.0167
+boc_lr               Diabetes     0.6865±0.0165  0.1583±0.0091
+boc_rf               Diabetes     0.7720±0.0112  0.2660±0.0181
+sbert_mean_lr        Diabetes     0.7216±0.0174  0.2127±0.0094
+sbert_mean_rf        Diabetes     0.7414±0.0167  0.1990±0.0115

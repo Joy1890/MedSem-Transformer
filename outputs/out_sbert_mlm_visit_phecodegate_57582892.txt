@@ -1,0 +1,575 @@
+Device: cuda
+Variant: encoder=sbert  masking=visit
+         + PheCode dual-embedding (fusion=gate)
+
+=================================================================
+STEP 1: Loading MIMIC-IV data
+=================================================================
+Loading admissions.csv …
+  431,231 admissions, 180,733 patients
+Loading diagnoses_icd.csv …
+  4,756,326 diagnosis records
+
+=================================================================
+STEP 2: Building patient visit sequences
+=================================================================
+Building patient visit sequences …
+  79,393 patients with ≥2 visits | avg 4.2 visits/patient | avg 48.6 codes/patient
+
+=================================================================
+STEP 3: Loading ICD code descriptions
+=================================================================
+Loaded 109,775 ICD descriptions from /home/hy434/project/LLM_project_code/hosp/d_icd_diagnoses.csv
+
+=================================================================
+STEP 4: Building vocabulary and splitting patients
+=================================================================
+Vocabulary size: 23,410 unique ICD codes
+Patient split — pretrain: 55,575 | val: 15,878 | test: 7,940
+Vocabulary saved to /home/hy434/project/LLM_project_code/outputs_phecode/vocab.pkl
+
+=================================================================
+STEP 5: Building code embeddings (sbert)
+=================================================================
+Loading SBERT model 'all-MiniLM-L6-v2' …
+Encoding 23,410 ICD code descriptions …
+SBERT embeddings shape: (23410, 384)
+Saved embeddings to /home/hy434/project/LLM_project_code/outputs_phecode/sbert_embeddings.pt
+  encoder_dim = 384  →  hidden_dim = 384
+
+=================================================================
+STEP 5b: Building PheCode embeddings (fusion=gate)
+=================================================================
+Loaded 101,015 ICD→PheCode mappings from /home/hy434/project/LLM_project_code/phecodes_cm_rolled.csv
+Building PheCode embeddings using SBERT 'all-MiniLM-L6-v2' …
+  PheCode coverage: 21,669/23,410 codes (92.6%)  |  1,741 using ICD description fallback
+  Encoding 23,410 descriptions …
+PheCode embeddings shape: (23410, 384)
+Saved PheCode embeddings to /home/hy434/project/LLM_project_code/outputs_phecode/phecode_embeddings_all-MiniLM-L6-v2.pt
+  PheCode embedding shape: (23410, 384)
+
+=================================================================
+STEP 6: Building Sent-e-Med model
+=================================================================
+PheCode fusion: gate    sigmoid(Linear(768 → 384))
+Trainable parameters      : 25,780,325
+Frozen encoder buffer     : 17,978,880 elements
+
+=================================================================
+STEP 7: Pretraining
+=================================================================
+Pretraining on 55,575 patients | Validating on 5,000
+Objective: MLM only  | Masking: visit-level
+
+Trainable parameters: 25,780,325  | SBERT buffer (frozen): 17,978,880 elements
+
+ Epoch    Train Loss    Val Loss       MLM       NVP
+────────────────────────────────────────────────────────────
+     1        8.1275      7.4540    8.1275    0.0000
+         ✓ New best model saved  (val_loss=7.4540)
+     2        7.3260      7.2362    7.3260    0.0000
+         ✓ New best model saved  (val_loss=7.2362)
+     3        7.0928      7.0042    7.0928    0.0000
+         ✓ New best model saved  (val_loss=7.0042)
+     4        6.9005      6.8578    6.9005    0.0000
+         ✓ New best model saved  (val_loss=6.8578)
+     5        6.7678      6.7488    6.7678    0.0000
+         ✓ New best model saved  (val_loss=6.7488)
+     6        6.6569      6.6504    6.6569    0.0000
+         ✓ New best model saved  (val_loss=6.6504)
+     7        6.5742      6.5662    6.5742    0.0000
+         ✓ New best model saved  (val_loss=6.5662)
+     8        6.4984      6.5101    6.4984    0.0000
+         ✓ New best model saved  (val_loss=6.5101)
+     9        6.4402      6.4457    6.4402    0.0000
+         ✓ New best model saved  (val_loss=6.4457)
+    10        6.3880      6.3997    6.3880    0.0000
+         ✓ New best model saved  (val_loss=6.3997)
+    11        6.3299      6.3599    6.3299    0.0000
+         ✓ New best model saved  (val_loss=6.3599)
+    12        6.2952      6.3153    6.2952    0.0000
+         ✓ New best model saved  (val_loss=6.3153)
+    13        6.2552      6.2805    6.2552    0.0000
+         ✓ New best model saved  (val_loss=6.2805)
+    14        6.2231      6.2495    6.2231    0.0000
+         ✓ New best model saved  (val_loss=6.2495)
+    15        6.1906      6.2246    6.1906    0.0000
+         ✓ New best model saved  (val_loss=6.2246)
+    16        6.1554      6.1936    6.1554    0.0000
+         ✓ New best model saved  (val_loss=6.1936)
+    17        6.1349      6.1722    6.1349    0.0000
+         ✓ New best model saved  (val_loss=6.1722)
+    18        6.1102      6.1493    6.1102    0.0000
+         ✓ New best model saved  (val_loss=6.1493)
+    19        6.0899      6.1305    6.0899    0.0000
+         ✓ New best model saved  (val_loss=6.1305)
+    20        6.0708      6.1122    6.0708    0.0000
+         ✓ New best model saved  (val_loss=6.1122)
+    21        6.0483      6.0974    6.0483    0.0000
+         ✓ New best model saved  (val_loss=6.0974)
+    22        6.0371      6.0770    6.0371    0.0000
+         ✓ New best model saved  (val_loss=6.0770)
+    23        6.0170      6.0627    6.0170    0.0000
+         ✓ New best model saved  (val_loss=6.0627)
+    24        5.9982      6.0519    5.9982    0.0000
+         ✓ New best model saved  (val_loss=6.0519)
+    25        5.9908      6.0407    5.9908    0.0000
+         ✓ New best model saved  (val_loss=6.0407)
+    26        5.9695      6.0295    5.9695    0.0000
+         ✓ New best model saved  (val_loss=6.0295)
+    27        5.9575      6.0196    5.9575    0.0000
+         ✓ New best model saved  (val_loss=6.0196)
+    28        5.9525      6.0074    5.9525    0.0000
+         ✓ New best model saved  (val_loss=6.0074)
+    29        5.9443      5.9967    5.9443    0.0000
+         ✓ New best model saved  (val_loss=5.9967)
+    30        5.9341      5.9872    5.9341    0.0000
+         ✓ New best model saved  (val_loss=5.9872)
+    31        5.9197      5.9867    5.9197    0.0000
+         ✓ New best model saved  (val_loss=5.9867)
+    32        5.9114      5.9786    5.9114    0.0000
+         ✓ New best model saved  (val_loss=5.9786)
+    33        5.9001      5.9705    5.9001    0.0000
+         ✓ New best model saved  (val_loss=5.9705)
+    34        5.8974      5.9659    5.8974    0.0000
+         ✓ New best model saved  (val_loss=5.9659)
+    35        5.8897      5.9569    5.8897    0.0000
+         ✓ New best model saved  (val_loss=5.9569)
+    36        5.8840      5.9533    5.8840    0.0000
+         ✓ New best model saved  (val_loss=5.9533)
+    37        5.8805      5.9479    5.8805    0.0000
+         ✓ New best model saved  (val_loss=5.9479)
+    38        5.8765      5.9459    5.8765    0.0000
+         ✓ New best model saved  (val_loss=5.9459)
+    39        5.8718      5.9396    5.8718    0.0000
+         ✓ New best model saved  (val_loss=5.9396)
+    40        5.8682      5.9360    5.8682    0.0000
+         ✓ New best model saved  (val_loss=5.9360)
+    41        5.8610      5.9358    5.8610    0.0000
+         ✓ New best model saved  (val_loss=5.9358)
+    42        5.8593      5.9318    5.8593    0.0000
+         ✓ New best model saved  (val_loss=5.9318)
+    43        5.8542      5.9291    5.8542    0.0000
+         ✓ New best model saved  (val_loss=5.9291)
+    44        5.8533      5.9263    5.8533    0.0000
+         ✓ New best model saved  (val_loss=5.9263)
+    45        5.8516      5.9250    5.8516    0.0000
+         ✓ New best model saved  (val_loss=5.9250)
+    46        5.8468      5.9234    5.8468    0.0000
+         ✓ New best model saved  (val_loss=5.9234)
+    47        5.8448      5.9205    5.8448    0.0000
+         ✓ New best model saved  (val_loss=5.9205)
+    48        5.8471      5.9212    5.8471    0.0000
+    49        5.8451      5.9173    5.8451    0.0000
+         ✓ New best model saved  (val_loss=5.9173)
+    50        5.8383      5.9161    5.8383    0.0000
+         ✓ New best model saved  (val_loss=5.9161)
+
+Pretraining complete. Best val loss: 5.9161
+
+=================================================================
+STEP 8: Fine-tuning
+=================================================================
+SUD dataset — cases: 2,340, controls: 19,559, skipped (condition at visit 0): 1,919, total: 21,899
+  Fine-tune split — train: 15,329 | val: 3,284 | test: 3,286
+
+=================================================================
+Fine-tuning: SUD  |  cases=2,340  controls=19,559
+  Train=15,329  Val=3,284  Test=3,286  Runs=5
+=================================================================
+
+
+── Run 1/5 ──────────────────────────────
+    Run 1 | Epoch  1/20 | Loss=0.4590 | Val ROC-AUC=0.8933 | Val PR-AUC=0.7273
+    Run 1 | Epoch  2/20 | Loss=0.3700 | Val ROC-AUC=0.9021 | Val PR-AUC=0.7685
+    Run 1 | Epoch  3/20 | Loss=0.3415 | Val ROC-AUC=0.9063 | Val PR-AUC=0.7802
+    Run 1 | Epoch  4/20 | Loss=0.3217 | Val ROC-AUC=0.9066 | Val PR-AUC=0.7845
+    Run 1 | Epoch  5/20 | Loss=0.3047 | Val ROC-AUC=0.9063 | Val PR-AUC=0.7828
+    Run 1 | Epoch  6/20 | Loss=0.2806 | Val ROC-AUC=0.9077 | Val PR-AUC=0.7802
+    Run 1 | Epoch  7/20 | Loss=0.2737 | Val ROC-AUC=0.9062 | Val PR-AUC=0.7762
+    Run 1 | Epoch  8/20 | Loss=0.2580 | Val ROC-AUC=0.9034 | Val PR-AUC=0.7788
+    Run 1 | Epoch  9/20 | Loss=0.2419 | Val ROC-AUC=0.9032 | Val PR-AUC=0.7745
+    Run 1 | Epoch 10/20 | Loss=0.2226 | Val ROC-AUC=0.9043 | Val PR-AUC=0.7676
+    Run 1 | Epoch 11/20 | Loss=0.2151 | Val ROC-AUC=0.9019 | Val PR-AUC=0.7717
+    Run 1 | Epoch 12/20 | Loss=0.1956 | Val ROC-AUC=0.8990 | Val PR-AUC=0.7637
+    Run 1 | Epoch 13/20 | Loss=0.1825 | Val ROC-AUC=0.8934 | Val PR-AUC=0.7525
+    Run 1 | Epoch 14/20 | Loss=0.1719 | Val ROC-AUC=0.8939 | Val PR-AUC=0.7488
+    Run 1 | Epoch 15/20 | Loss=0.1584 | Val ROC-AUC=0.8988 | Val PR-AUC=0.7582
+    Run 1 | Epoch 16/20 | Loss=0.1460 | Val ROC-AUC=0.8878 | Val PR-AUC=0.7375
+    Run 1 | Epoch 17/20 | Loss=0.1369 | Val ROC-AUC=0.8866 | Val PR-AUC=0.7462
+    Run 1 | Epoch 18/20 | Loss=0.1321 | Val ROC-AUC=0.8881 | Val PR-AUC=0.7446
+    Run 1 | Epoch 19/20 | Loss=0.1191 | Val ROC-AUC=0.8875 | Val PR-AUC=0.7505
+    Run 1 | Epoch 20/20 | Loss=0.1173 | Val ROC-AUC=0.8866 | Val PR-AUC=0.7425
+  → Run 1 TEST | ROC-AUC=0.9143 | PR-AUC=0.7805
+
+── Run 2/5 ──────────────────────────────
+    Run 2 | Epoch  1/20 | Loss=0.4644 | Val ROC-AUC=0.8984 | Val PR-AUC=0.7349
+    Run 2 | Epoch  2/20 | Loss=0.3668 | Val ROC-AUC=0.9046 | Val PR-AUC=0.7690
+    Run 2 | Epoch  3/20 | Loss=0.3374 | Val ROC-AUC=0.9058 | Val PR-AUC=0.7827
+    Run 2 | Epoch  4/20 | Loss=0.3133 | Val ROC-AUC=0.9066 | Val PR-AUC=0.7846
+    Run 2 | Epoch  5/20 | Loss=0.3024 | Val ROC-AUC=0.9058 | Val PR-AUC=0.7816
+    Run 2 | Epoch  6/20 | Loss=0.2887 | Val ROC-AUC=0.9048 | Val PR-AUC=0.7792
+    Run 2 | Epoch  7/20 | Loss=0.2701 | Val ROC-AUC=0.9043 | Val PR-AUC=0.7783
+    Run 2 | Epoch  8/20 | Loss=0.2566 | Val ROC-AUC=0.8980 | Val PR-AUC=0.7655
+    Run 2 | Epoch  9/20 | Loss=0.2534 | Val ROC-AUC=0.9028 | Val PR-AUC=0.7752
+    Run 2 | Epoch 10/20 | Loss=0.2253 | Val ROC-AUC=0.9007 | Val PR-AUC=0.7697
+    Run 2 | Epoch 11/20 | Loss=0.2126 | Val ROC-AUC=0.8980 | Val PR-AUC=0.7697
+    Run 2 | Epoch 12/20 | Loss=0.1959 | Val ROC-AUC=0.8987 | Val PR-AUC=0.7648
+    Run 2 | Epoch 13/20 | Loss=0.1805 | Val ROC-AUC=0.8951 | Val PR-AUC=0.7594
+    Run 2 | Epoch 14/20 | Loss=0.1752 | Val ROC-AUC=0.8898 | Val PR-AUC=0.7574
+    Run 2 | Epoch 15/20 | Loss=0.1628 | Val ROC-AUC=0.8888 | Val PR-AUC=0.7528
+    Run 2 | Epoch 16/20 | Loss=0.1511 | Val ROC-AUC=0.8901 | Val PR-AUC=0.7600
+    Run 2 | Epoch 17/20 | Loss=0.1431 | Val ROC-AUC=0.8846 | Val PR-AUC=0.7472
+    Run 2 | Epoch 18/20 | Loss=0.1357 | Val ROC-AUC=0.8861 | Val PR-AUC=0.7484
+    Run 2 | Epoch 19/20 | Loss=0.1185 | Val ROC-AUC=0.8852 | Val PR-AUC=0.7403
+    Run 2 | Epoch 20/20 | Loss=0.1183 | Val ROC-AUC=0.8827 | Val PR-AUC=0.7422
+  → Run 2 TEST | ROC-AUC=0.9114 | PR-AUC=0.7771
+
+── Run 3/5 ──────────────────────────────
+    Run 3 | Epoch  1/20 | Loss=0.4607 | Val ROC-AUC=0.8926 | Val PR-AUC=0.7253
+    Run 3 | Epoch  2/20 | Loss=0.3697 | Val ROC-AUC=0.9029 | Val PR-AUC=0.7732
+    Run 3 | Epoch  3/20 | Loss=0.3335 | Val ROC-AUC=0.9058 | Val PR-AUC=0.7826
+    Run 3 | Epoch  4/20 | Loss=0.3234 | Val ROC-AUC=0.9054 | Val PR-AUC=0.7799
+    Run 3 | Epoch  5/20 | Loss=0.2971 | Val ROC-AUC=0.9058 | Val PR-AUC=0.7802
+    Run 3 | Epoch  6/20 | Loss=0.2914 | Val ROC-AUC=0.9075 | Val PR-AUC=0.7837
+    Run 3 | Epoch  7/20 | Loss=0.2830 | Val ROC-AUC=0.9036 | Val PR-AUC=0.7793
+    Run 3 | Epoch  8/20 | Loss=0.2565 | Val ROC-AUC=0.9021 | Val PR-AUC=0.7751
+    Run 3 | Epoch  9/20 | Loss=0.2374 | Val ROC-AUC=0.9029 | Val PR-AUC=0.7745
+    Run 3 | Epoch 10/20 | Loss=0.2310 | Val ROC-AUC=0.9025 | Val PR-AUC=0.7748
+    Run 3 | Epoch 11/20 | Loss=0.2148 | Val ROC-AUC=0.9018 | Val PR-AUC=0.7733
+    Run 3 | Epoch 12/20 | Loss=0.1995 | Val ROC-AUC=0.9000 | Val PR-AUC=0.7627
+    Run 3 | Epoch 13/20 | Loss=0.1852 | Val ROC-AUC=0.8980 | Val PR-AUC=0.7619
+    Run 3 | Epoch 14/20 | Loss=0.1708 | Val ROC-AUC=0.8957 | Val PR-AUC=0.7648
+    Run 3 | Epoch 15/20 | Loss=0.1584 | Val ROC-AUC=0.8925 | Val PR-AUC=0.7535
+    Run 3 | Epoch 16/20 | Loss=0.1496 | Val ROC-AUC=0.8872 | Val PR-AUC=0.7396
+    Run 3 | Epoch 17/20 | Loss=0.1352 | Val ROC-AUC=0.8820 | Val PR-AUC=0.7364
+    Run 3 | Epoch 18/20 | Loss=0.1288 | Val ROC-AUC=0.8839 | Val PR-AUC=0.7468
+    Run 3 | Epoch 19/20 | Loss=0.1231 | Val ROC-AUC=0.8815 | Val PR-AUC=0.7435
+    Run 3 | Epoch 20/20 | Loss=0.1165 | Val ROC-AUC=0.8840 | Val PR-AUC=0.7500
+  → Run 3 TEST | ROC-AUC=0.9135 | PR-AUC=0.7812
+
+── Run 4/5 ──────────────────────────────
+    Run 4 | Epoch  1/20 | Loss=0.4569 | Val ROC-AUC=0.8951 | Val PR-AUC=0.7183
+    Run 4 | Epoch  2/20 | Loss=0.3725 | Val ROC-AUC=0.8991 | Val PR-AUC=0.7679
+    Run 4 | Epoch  3/20 | Loss=0.3387 | Val ROC-AUC=0.9046 | Val PR-AUC=0.7794
+    Run 4 | Epoch  4/20 | Loss=0.3205 | Val ROC-AUC=0.9050 | Val PR-AUC=0.7819
+    Run 4 | Epoch  5/20 | Loss=0.3018 | Val ROC-AUC=0.9047 | Val PR-AUC=0.7816
+    Run 4 | Epoch  6/20 | Loss=0.2847 | Val ROC-AUC=0.9059 | Val PR-AUC=0.7806
+    Run 4 | Epoch  7/20 | Loss=0.2707 | Val ROC-AUC=0.9006 | Val PR-AUC=0.7724
+    Run 4 | Epoch  8/20 | Loss=0.2470 | Val ROC-AUC=0.9040 | Val PR-AUC=0.7756
+    Run 4 | Epoch  9/20 | Loss=0.2416 | Val ROC-AUC=0.8989 | Val PR-AUC=0.7674
+    Run 4 | Epoch 10/20 | Loss=0.2217 | Val ROC-AUC=0.9013 | Val PR-AUC=0.7756
+    Run 4 | Epoch 11/20 | Loss=0.2121 | Val ROC-AUC=0.8961 | Val PR-AUC=0.7552
+    Run 4 | Epoch 12/20 | Loss=0.1999 | Val ROC-AUC=0.8942 | Val PR-AUC=0.7550
+    Run 4 | Epoch 13/20 | Loss=0.1883 | Val ROC-AUC=0.8911 | Val PR-AUC=0.7534
+    Run 4 | Epoch 14/20 | Loss=0.1747 | Val ROC-AUC=0.8859 | Val PR-AUC=0.7346
+    Run 4 | Epoch 15/20 | Loss=0.1695 | Val ROC-AUC=0.8911 | Val PR-AUC=0.7539
+    Run 4 | Epoch 16/20 | Loss=0.1463 | Val ROC-AUC=0.8835 | Val PR-AUC=0.7382
+    Run 4 | Epoch 17/20 | Loss=0.1394 | Val ROC-AUC=0.8849 | Val PR-AUC=0.7364
+    Run 4 | Epoch 18/20 | Loss=0.1258 | Val ROC-AUC=0.8834 | Val PR-AUC=0.7401
+    Run 4 | Epoch 19/20 | Loss=0.1230 | Val ROC-AUC=0.8864 | Val PR-AUC=0.7401
+    Run 4 | Epoch 20/20 | Loss=0.1172 | Val ROC-AUC=0.8884 | Val PR-AUC=0.7410
+  → Run 4 TEST | ROC-AUC=0.9092 | PR-AUC=0.7808
+
+── Run 5/5 ──────────────────────────────
+    Run 5 | Epoch  1/20 | Loss=0.4647 | Val ROC-AUC=0.8953 | Val PR-AUC=0.7363
+    Run 5 | Epoch  2/20 | Loss=0.3792 | Val ROC-AUC=0.9078 | Val PR-AUC=0.7739
+    Run 5 | Epoch  3/20 | Loss=0.3347 | Val ROC-AUC=0.9080 | Val PR-AUC=0.7802
+    Run 5 | Epoch  4/20 | Loss=0.3189 | Val ROC-AUC=0.9074 | Val PR-AUC=0.7866
+    Run 5 | Epoch  5/20 | Loss=0.3025 | Val ROC-AUC=0.9102 | Val PR-AUC=0.7822
+    Run 5 | Epoch  6/20 | Loss=0.2844 | Val ROC-AUC=0.9059 | Val PR-AUC=0.7835
+    Run 5 | Epoch  7/20 | Loss=0.2700 | Val ROC-AUC=0.9076 | Val PR-AUC=0.7822
+    Run 5 | Epoch  8/20 | Loss=0.2590 | Val ROC-AUC=0.9035 | Val PR-AUC=0.7796
+    Run 5 | Epoch  9/20 | Loss=0.2390 | Val ROC-AUC=0.8981 | Val PR-AUC=0.7707
+    Run 5 | Epoch 10/20 | Loss=0.2282 | Val ROC-AUC=0.8993 | Val PR-AUC=0.7676
+    Run 5 | Epoch 11/20 | Loss=0.2155 | Val ROC-AUC=0.8933 | Val PR-AUC=0.7623
+    Run 5 | Epoch 12/20 | Loss=0.1981 | Val ROC-AUC=0.8953 | Val PR-AUC=0.7591
+    Run 5 | Epoch 13/20 | Loss=0.1816 | Val ROC-AUC=0.8950 | Val PR-AUC=0.7558
+    Run 5 | Epoch 14/20 | Loss=0.1722 | Val ROC-AUC=0.8914 | Val PR-AUC=0.7480
+    Run 5 | Epoch 15/20 | Loss=0.1539 | Val ROC-AUC=0.8852 | Val PR-AUC=0.7438
+    Run 5 | Epoch 16/20 | Loss=0.1443 | Val ROC-AUC=0.8909 | Val PR-AUC=0.7543
+    Run 5 | Epoch 17/20 | Loss=0.1347 | Val ROC-AUC=0.8868 | Val PR-AUC=0.7493
+    Run 5 | Epoch 18/20 | Loss=0.1291 | Val ROC-AUC=0.8857 | Val PR-AUC=0.7532
+    Run 5 | Epoch 19/20 | Loss=0.1193 | Val ROC-AUC=0.8883 | Val PR-AUC=0.7491
+    Run 5 | Epoch 20/20 | Loss=0.1178 | Val ROC-AUC=0.8864 | Val PR-AUC=0.7483
+  → Run 5 TEST | ROC-AUC=0.9071 | PR-AUC=0.7718
+
+─────────────────────────────────────────────────────────────────
+FINAL  SUD
+  ROC-AUC : 0.9111 ± 0.0027
+  PR-AUC  : 0.7783 ± 0.0036
+─────────────────────────────────────────────────────────────────
+
+Results saved to /home/hy434/project/LLM_project_code/outputs_phecode/SUD_sbert_mlm_maskvisit_phecodegate_results.pkl
+OUD dataset — cases: 577, controls: 22,829, skipped (condition at visit 0): 412, total: 23,406
+  Fine-tune split — train: 16,383 | val: 3,510 | test: 3,513
+
+=================================================================
+Fine-tuning: OUD  |  cases=577  controls=22,829
+  Train=16,383  Val=3,510  Test=3,513  Runs=5
+=================================================================
+
+
+── Run 1/5 ──────────────────────────────
+    Run 1 | Epoch  1/20 | Loss=0.3538 | Val ROC-AUC=0.9573 | Val PR-AUC=0.5307
+    Run 1 | Epoch  2/20 | Loss=0.2313 | Val ROC-AUC=0.9572 | Val PR-AUC=0.6173
+    Run 1 | Epoch  3/20 | Loss=0.1723 | Val ROC-AUC=0.9563 | Val PR-AUC=0.6387
+    Run 1 | Epoch  4/20 | Loss=0.1296 | Val ROC-AUC=0.9581 | Val PR-AUC=0.6448
+    Run 1 | Epoch  5/20 | Loss=0.1051 | Val ROC-AUC=0.9556 | Val PR-AUC=0.6494
+    Run 1 | Epoch  6/20 | Loss=0.0862 | Val ROC-AUC=0.9489 | Val PR-AUC=0.6328
+    Run 1 | Epoch  7/20 | Loss=0.0757 | Val ROC-AUC=0.9558 | Val PR-AUC=0.6465
+    Run 1 | Epoch  8/20 | Loss=0.0625 | Val ROC-AUC=0.9473 | Val PR-AUC=0.6422
+    Run 1 | Epoch  9/20 | Loss=0.0526 | Val ROC-AUC=0.9497 | Val PR-AUC=0.6461
+    Run 1 | Epoch 10/20 | Loss=0.0432 | Val ROC-AUC=0.9438 | Val PR-AUC=0.6448
+    Run 1 | Epoch 11/20 | Loss=0.0417 | Val ROC-AUC=0.9517 | Val PR-AUC=0.6505
+    Run 1 | Epoch 12/20 | Loss=0.0370 | Val ROC-AUC=0.9459 | Val PR-AUC=0.6495
+    Run 1 | Epoch 13/20 | Loss=0.0277 | Val ROC-AUC=0.9389 | Val PR-AUC=0.6442
+    Run 1 | Epoch 14/20 | Loss=0.0284 | Val ROC-AUC=0.9431 | Val PR-AUC=0.6455
+    Run 1 | Epoch 15/20 | Loss=0.0290 | Val ROC-AUC=0.9302 | Val PR-AUC=0.6416
+    Run 1 | Epoch 16/20 | Loss=0.0194 | Val ROC-AUC=0.9212 | Val PR-AUC=0.6288
+    Run 1 | Epoch 17/20 | Loss=0.0200 | Val ROC-AUC=0.9265 | Val PR-AUC=0.6441
+    Run 1 | Epoch 18/20 | Loss=0.0185 | Val ROC-AUC=0.9265 | Val PR-AUC=0.6417
+    Run 1 | Epoch 19/20 | Loss=0.0171 | Val ROC-AUC=0.9265 | Val PR-AUC=0.6349
+    Run 1 | Epoch 20/20 | Loss=0.0141 | Val ROC-AUC=0.9264 | Val PR-AUC=0.6579
+  → Run 1 TEST | ROC-AUC=0.9581 | PR-AUC=0.7069
+
+── Run 2/5 ──────────────────────────────
+    Run 2 | Epoch  1/20 | Loss=0.3538 | Val ROC-AUC=0.9554 | Val PR-AUC=0.5323
+    Run 2 | Epoch  2/20 | Loss=0.2342 | Val ROC-AUC=0.9567 | Val PR-AUC=0.6171
+    Run 2 | Epoch  3/20 | Loss=0.1689 | Val ROC-AUC=0.9585 | Val PR-AUC=0.6370
+    Run 2 | Epoch  4/20 | Loss=0.1326 | Val ROC-AUC=0.9588 | Val PR-AUC=0.6468
+    Run 2 | Epoch  5/20 | Loss=0.1045 | Val ROC-AUC=0.9570 | Val PR-AUC=0.6484
+    Run 2 | Epoch  6/20 | Loss=0.0864 | Val ROC-AUC=0.9544 | Val PR-AUC=0.6421
+    Run 2 | Epoch  7/20 | Loss=0.0745 | Val ROC-AUC=0.9521 | Val PR-AUC=0.6365
+    Run 2 | Epoch  8/20 | Loss=0.0617 | Val ROC-AUC=0.9505 | Val PR-AUC=0.6534
+    Run 2 | Epoch  9/20 | Loss=0.0554 | Val ROC-AUC=0.9433 | Val PR-AUC=0.6489
+    Run 2 | Epoch 10/20 | Loss=0.0443 | Val ROC-AUC=0.9390 | Val PR-AUC=0.6503
+    Run 2 | Epoch 11/20 | Loss=0.0379 | Val ROC-AUC=0.9432 | Val PR-AUC=0.6420
+    Run 2 | Epoch 12/20 | Loss=0.0369 | Val ROC-AUC=0.9341 | Val PR-AUC=0.6343
+    Run 2 | Epoch 13/20 | Loss=0.0279 | Val ROC-AUC=0.9329 | Val PR-AUC=0.6306
+    Run 2 | Epoch 14/20 | Loss=0.0235 | Val ROC-AUC=0.9327 | Val PR-AUC=0.6432
+    Run 2 | Epoch 15/20 | Loss=0.0260 | Val ROC-AUC=0.9368 | Val PR-AUC=0.6221
+    Run 2 | Epoch 16/20 | Loss=0.0220 | Val ROC-AUC=0.9265 | Val PR-AUC=0.6399
+    Run 2 | Epoch 17/20 | Loss=0.0182 | Val ROC-AUC=0.9230 | Val PR-AUC=0.6127
+    Run 2 | Epoch 18/20 | Loss=0.0191 | Val ROC-AUC=0.9208 | Val PR-AUC=0.6419
+    Run 2 | Epoch 19/20 | Loss=0.0124 | Val ROC-AUC=0.9226 | Val PR-AUC=0.6378
+    Run 2 | Epoch 20/20 | Loss=0.0160 | Val ROC-AUC=0.9121 | Val PR-AUC=0.6227
+  → Run 2 TEST | ROC-AUC=0.9544 | PR-AUC=0.6861
+
+── Run 3/5 ──────────────────────────────
+    Run 3 | Epoch  1/20 | Loss=0.3472 | Val ROC-AUC=0.9559 | Val PR-AUC=0.5620
+    Run 3 | Epoch  2/20 | Loss=0.2302 | Val ROC-AUC=0.9579 | Val PR-AUC=0.6018
+    Run 3 | Epoch  3/20 | Loss=0.1821 | Val ROC-AUC=0.9583 | Val PR-AUC=0.6240
+    Run 3 | Epoch  4/20 | Loss=0.1350 | Val ROC-AUC=0.9520 | Val PR-AUC=0.6344
+    Run 3 | Epoch  5/20 | Loss=0.1037 | Val ROC-AUC=0.9560 | Val PR-AUC=0.6355
+    Run 3 | Epoch  6/20 | Loss=0.0966 | Val ROC-AUC=0.9531 | Val PR-AUC=0.6500
+    Run 3 | Epoch  7/20 | Loss=0.0684 | Val ROC-AUC=0.9495 | Val PR-AUC=0.6435
+    Run 3 | Epoch  8/20 | Loss=0.0570 | Val ROC-AUC=0.9489 | Val PR-AUC=0.6370
+    Run 3 | Epoch  9/20 | Loss=0.0518 | Val ROC-AUC=0.9416 | Val PR-AUC=0.6328
+    Run 3 | Epoch 10/20 | Loss=0.0447 | Val ROC-AUC=0.9458 | Val PR-AUC=0.6393
+    Run 3 | Epoch 11/20 | Loss=0.0370 | Val ROC-AUC=0.9402 | Val PR-AUC=0.6401
+    Run 3 | Epoch 12/20 | Loss=0.0363 | Val ROC-AUC=0.9357 | Val PR-AUC=0.6354
+    Run 3 | Epoch 13/20 | Loss=0.0348 | Val ROC-AUC=0.9365 | Val PR-AUC=0.6269
+    Run 3 | Epoch 14/20 | Loss=0.0289 | Val ROC-AUC=0.9352 | Val PR-AUC=0.6363
+    Run 3 | Epoch 15/20 | Loss=0.0230 | Val ROC-AUC=0.9231 | Val PR-AUC=0.6332
+    Run 3 | Epoch 16/20 | Loss=0.0237 | Val ROC-AUC=0.9278 | Val PR-AUC=0.6351
+    Run 3 | Epoch 17/20 | Loss=0.0203 | Val ROC-AUC=0.9266 | Val PR-AUC=0.6381
+    Run 3 | Epoch 18/20 | Loss=0.0155 | Val ROC-AUC=0.9186 | Val PR-AUC=0.6218
+    Run 3 | Epoch 19/20 | Loss=0.0160 | Val ROC-AUC=0.9142 | Val PR-AUC=0.6345
+    Run 3 | Epoch 20/20 | Loss=0.0135 | Val ROC-AUC=0.9127 | Val PR-AUC=0.6283
+  → Run 3 TEST | ROC-AUC=0.9555 | PR-AUC=0.6793
+
+── Run 4/5 ──────────────────────────────
+    Run 4 | Epoch  1/20 | Loss=0.3468 | Val ROC-AUC=0.9533 | Val PR-AUC=0.5296
+    Run 4 | Epoch  2/20 | Loss=0.2370 | Val ROC-AUC=0.9577 | Val PR-AUC=0.6242
+    Run 4 | Epoch  3/20 | Loss=0.1755 | Val ROC-AUC=0.9550 | Val PR-AUC=0.6345
+    Run 4 | Epoch  4/20 | Loss=0.1341 | Val ROC-AUC=0.9539 | Val PR-AUC=0.6397
+    Run 4 | Epoch  5/20 | Loss=0.0996 | Val ROC-AUC=0.9511 | Val PR-AUC=0.6308
+    Run 4 | Epoch  6/20 | Loss=0.0867 | Val ROC-AUC=0.9505 | Val PR-AUC=0.6373
+    Run 4 | Epoch  7/20 | Loss=0.0722 | Val ROC-AUC=0.9487 | Val PR-AUC=0.6462
+    Run 4 | Epoch  8/20 | Loss=0.0593 | Val ROC-AUC=0.9492 | Val PR-AUC=0.6425
+    Run 4 | Epoch  9/20 | Loss=0.0523 | Val ROC-AUC=0.9492 | Val PR-AUC=0.6597
+    Run 4 | Epoch 10/20 | Loss=0.0496 | Val ROC-AUC=0.9434 | Val PR-AUC=0.6444
+    Run 4 | Epoch 11/20 | Loss=0.0403 | Val ROC-AUC=0.9435 | Val PR-AUC=0.6509
+    Run 4 | Epoch 12/20 | Loss=0.0359 | Val ROC-AUC=0.9353 | Val PR-AUC=0.6335
+    Run 4 | Epoch 13/20 | Loss=0.0332 | Val ROC-AUC=0.9263 | Val PR-AUC=0.6355
+    Run 4 | Epoch 14/20 | Loss=0.0275 | Val ROC-AUC=0.9366 | Val PR-AUC=0.6420
+    Run 4 | Epoch 15/20 | Loss=0.0277 | Val ROC-AUC=0.9277 | Val PR-AUC=0.6356
+    Run 4 | Epoch 16/20 | Loss=0.0229 | Val ROC-AUC=0.9264 | Val PR-AUC=0.6291
+    Run 4 | Epoch 17/20 | Loss=0.0182 | Val ROC-AUC=0.9226 | Val PR-AUC=0.6319
+    Run 4 | Epoch 18/20 | Loss=0.0195 | Val ROC-AUC=0.9053 | Val PR-AUC=0.6229
+    Run 4 | Epoch 19/20 | Loss=0.0139 | Val ROC-AUC=0.9149 | Val PR-AUC=0.6321
+    Run 4 | Epoch 20/20 | Loss=0.0175 | Val ROC-AUC=0.8980 | Val PR-AUC=0.6235
+  → Run 4 TEST | ROC-AUC=0.9533 | PR-AUC=0.6555
+
+── Run 5/5 ──────────────────────────────
+    Run 5 | Epoch  1/20 | Loss=0.3559 | Val ROC-AUC=0.9530 | Val PR-AUC=0.5184
+    Run 5 | Epoch  2/20 | Loss=0.2317 | Val ROC-AUC=0.9549 | Val PR-AUC=0.6165
+    Run 5 | Epoch  3/20 | Loss=0.1791 | Val ROC-AUC=0.9537 | Val PR-AUC=0.6302
+    Run 5 | Epoch  4/20 | Loss=0.1304 | Val ROC-AUC=0.9546 | Val PR-AUC=0.6421
+    Run 5 | Epoch  5/20 | Loss=0.1045 | Val ROC-AUC=0.9574 | Val PR-AUC=0.6443
+    Run 5 | Epoch  6/20 | Loss=0.0805 | Val ROC-AUC=0.9530 | Val PR-AUC=0.6443
+    Run 5 | Epoch  7/20 | Loss=0.0740 | Val ROC-AUC=0.9530 | Val PR-AUC=0.6341
+    Run 5 | Epoch  8/20 | Loss=0.0600 | Val ROC-AUC=0.9474 | Val PR-AUC=0.6375
+    Run 5 | Epoch  9/20 | Loss=0.0501 | Val ROC-AUC=0.9468 | Val PR-AUC=0.6287
+    Run 5 | Epoch 10/20 | Loss=0.0452 | Val ROC-AUC=0.9451 | Val PR-AUC=0.6207
+    Run 5 | Epoch 11/20 | Loss=0.0407 | Val ROC-AUC=0.9374 | Val PR-AUC=0.6312
+    Run 5 | Epoch 12/20 | Loss=0.0355 | Val ROC-AUC=0.9405 | Val PR-AUC=0.6437
+    Run 5 | Epoch 13/20 | Loss=0.0314 | Val ROC-AUC=0.9328 | Val PR-AUC=0.6227
+    Run 5 | Epoch 14/20 | Loss=0.0278 | Val ROC-AUC=0.9157 | Val PR-AUC=0.6196
+    Run 5 | Epoch 15/20 | Loss=0.0245 | Val ROC-AUC=0.9177 | Val PR-AUC=0.6148
+    Run 5 | Epoch 16/20 | Loss=0.0240 | Val ROC-AUC=0.9276 | Val PR-AUC=0.6202
+    Run 5 | Epoch 17/20 | Loss=0.0165 | Val ROC-AUC=0.9255 | Val PR-AUC=0.6318
+    Run 5 | Epoch 18/20 | Loss=0.0215 | Val ROC-AUC=0.9197 | Val PR-AUC=0.6305
+    Run 5 | Epoch 19/20 | Loss=0.0180 | Val ROC-AUC=0.9094 | Val PR-AUC=0.6118
+    Run 5 | Epoch 20/20 | Loss=0.0140 | Val ROC-AUC=0.9129 | Val PR-AUC=0.6176
+  → Run 5 TEST | ROC-AUC=0.9581 | PR-AUC=0.7057
+
+─────────────────────────────────────────────────────────────────
+FINAL  OUD
+  ROC-AUC : 0.9559 ± 0.0019
+  PR-AUC  : 0.6867 ± 0.0190
+─────────────────────────────────────────────────────────────────
+
+Results saved to /home/hy434/project/LLM_project_code/outputs_phecode/OUD_sbert_mlm_maskvisit_phecodegate_results.pkl
+Diabetes dataset — cases: 1,355, controls: 17,483, skipped (condition at visit 0): 4,980, total: 18,838
+  Fine-tune split — train: 13,186 | val: 2,825 | test: 2,827
+
+=================================================================
+Fine-tuning: Diabetes  |  cases=1,355  controls=17,483
+  Train=13,186  Val=2,825  Test=2,827  Runs=5
+=================================================================
+
+
+── Run 1/5 ──────────────────────────────
+    Run 1 | Epoch  1/20 | Loss=0.4699 | Val ROC-AUC=0.8652 | Val PR-AUC=0.6457
+    Run 1 | Epoch  2/20 | Loss=0.3669 | Val ROC-AUC=0.8735 | Val PR-AUC=0.6701
+    Run 1 | Epoch  3/20 | Loss=0.3256 | Val ROC-AUC=0.8700 | Val PR-AUC=0.6676
+    Run 1 | Epoch  4/20 | Loss=0.2875 | Val ROC-AUC=0.8759 | Val PR-AUC=0.6720
+    Run 1 | Epoch  5/20 | Loss=0.2624 | Val ROC-AUC=0.8693 | Val PR-AUC=0.6647
+    Run 1 | Epoch  6/20 | Loss=0.2407 | Val ROC-AUC=0.8695 | Val PR-AUC=0.6651
+    Run 1 | Epoch  7/20 | Loss=0.2188 | Val ROC-AUC=0.8655 | Val PR-AUC=0.6554
+    Run 1 | Epoch  8/20 | Loss=0.1922 | Val ROC-AUC=0.8658 | Val PR-AUC=0.6585
+    Run 1 | Epoch  9/20 | Loss=0.1707 | Val ROC-AUC=0.8689 | Val PR-AUC=0.6578
+    Run 1 | Epoch 10/20 | Loss=0.1559 | Val ROC-AUC=0.8665 | Val PR-AUC=0.6629
+    Run 1 | Epoch 11/20 | Loss=0.1353 | Val ROC-AUC=0.8632 | Val PR-AUC=0.6550
+    Run 1 | Epoch 12/20 | Loss=0.1150 | Val ROC-AUC=0.8534 | Val PR-AUC=0.6479
+    Run 1 | Epoch 13/20 | Loss=0.1023 | Val ROC-AUC=0.8577 | Val PR-AUC=0.6500
+    Run 1 | Epoch 14/20 | Loss=0.0969 | Val ROC-AUC=0.8530 | Val PR-AUC=0.6491
+    Run 1 | Epoch 15/20 | Loss=0.0815 | Val ROC-AUC=0.8555 | Val PR-AUC=0.6437
+    Run 1 | Epoch 16/20 | Loss=0.0719 | Val ROC-AUC=0.8517 | Val PR-AUC=0.6449
+    Run 1 | Epoch 17/20 | Loss=0.0703 | Val ROC-AUC=0.8482 | Val PR-AUC=0.6484
+    Run 1 | Epoch 18/20 | Loss=0.0616 | Val ROC-AUC=0.8463 | Val PR-AUC=0.6463
+    Run 1 | Epoch 19/20 | Loss=0.0541 | Val ROC-AUC=0.8431 | Val PR-AUC=0.6451
+    Run 1 | Epoch 20/20 | Loss=0.0470 | Val ROC-AUC=0.8414 | Val PR-AUC=0.6362
+  → Run 1 TEST | ROC-AUC=0.8748 | PR-AUC=0.6822
+
+── Run 2/5 ──────────────────────────────
+    Run 2 | Epoch  1/20 | Loss=0.4546 | Val ROC-AUC=0.8656 | Val PR-AUC=0.6280
+    Run 2 | Epoch  2/20 | Loss=0.3605 | Val ROC-AUC=0.8721 | Val PR-AUC=0.6667
+    Run 2 | Epoch  3/20 | Loss=0.3235 | Val ROC-AUC=0.8754 | Val PR-AUC=0.6738
+    Run 2 | Epoch  4/20 | Loss=0.2907 | Val ROC-AUC=0.8709 | Val PR-AUC=0.6679
+    Run 2 | Epoch  5/20 | Loss=0.2614 | Val ROC-AUC=0.8710 | Val PR-AUC=0.6666
+    Run 2 | Epoch  6/20 | Loss=0.2400 | Val ROC-AUC=0.8725 | Val PR-AUC=0.6587
+    Run 2 | Epoch  7/20 | Loss=0.2101 | Val ROC-AUC=0.8686 | Val PR-AUC=0.6676
+    Run 2 | Epoch  8/20 | Loss=0.1882 | Val ROC-AUC=0.8638 | Val PR-AUC=0.6611
+    Run 2 | Epoch  9/20 | Loss=0.1666 | Val ROC-AUC=0.8601 | Val PR-AUC=0.6559
+    Run 2 | Epoch 10/20 | Loss=0.1546 | Val ROC-AUC=0.8586 | Val PR-AUC=0.6549
+    Run 2 | Epoch 11/20 | Loss=0.1299 | Val ROC-AUC=0.8595 | Val PR-AUC=0.6530
+    Run 2 | Epoch 12/20 | Loss=0.1112 | Val ROC-AUC=0.8535 | Val PR-AUC=0.6532
+    Run 2 | Epoch 13/20 | Loss=0.1101 | Val ROC-AUC=0.8570 | Val PR-AUC=0.6507
+    Run 2 | Epoch 14/20 | Loss=0.0900 | Val ROC-AUC=0.8574 | Val PR-AUC=0.6577
+    Run 2 | Epoch 15/20 | Loss=0.0822 | Val ROC-AUC=0.8536 | Val PR-AUC=0.6474
+    Run 2 | Epoch 16/20 | Loss=0.0720 | Val ROC-AUC=0.8566 | Val PR-AUC=0.6532
+    Run 2 | Epoch 17/20 | Loss=0.0601 | Val ROC-AUC=0.8565 | Val PR-AUC=0.6434
+    Run 2 | Epoch 18/20 | Loss=0.0551 | Val ROC-AUC=0.8568 | Val PR-AUC=0.6509
+    Run 2 | Epoch 19/20 | Loss=0.0490 | Val ROC-AUC=0.8509 | Val PR-AUC=0.6423
+    Run 2 | Epoch 20/20 | Loss=0.0507 | Val ROC-AUC=0.8499 | Val PR-AUC=0.6392
+  → Run 2 TEST | ROC-AUC=0.8754 | PR-AUC=0.6763
+
+── Run 3/5 ──────────────────────────────
+    Run 3 | Epoch  1/20 | Loss=0.4583 | Val ROC-AUC=0.8724 | Val PR-AUC=0.6458
+    Run 3 | Epoch  2/20 | Loss=0.3533 | Val ROC-AUC=0.8768 | Val PR-AUC=0.6711
+    Run 3 | Epoch  3/20 | Loss=0.3097 | Val ROC-AUC=0.8811 | Val PR-AUC=0.6789
+    Run 3 | Epoch  4/20 | Loss=0.2912 | Val ROC-AUC=0.8771 | Val PR-AUC=0.6780
+    Run 3 | Epoch  5/20 | Loss=0.2640 | Val ROC-AUC=0.8729 | Val PR-AUC=0.6689
+    Run 3 | Epoch  6/20 | Loss=0.2365 | Val ROC-AUC=0.8702 | Val PR-AUC=0.6677
+    Run 3 | Epoch  7/20 | Loss=0.2150 | Val ROC-AUC=0.8726 | Val PR-AUC=0.6647
+    Run 3 | Epoch  8/20 | Loss=0.1860 | Val ROC-AUC=0.8686 | Val PR-AUC=0.6650
+    Run 3 | Epoch  9/20 | Loss=0.1731 | Val ROC-AUC=0.8661 | Val PR-AUC=0.6602
+    Run 3 | Epoch 10/20 | Loss=0.1479 | Val ROC-AUC=0.8664 | Val PR-AUC=0.6562
+    Run 3 | Epoch 11/20 | Loss=0.1326 | Val ROC-AUC=0.8582 | Val PR-AUC=0.6492
+    Run 3 | Epoch 12/20 | Loss=0.1217 | Val ROC-AUC=0.8586 | Val PR-AUC=0.6564
+    Run 3 | Epoch 13/20 | Loss=0.1054 | Val ROC-AUC=0.8549 | Val PR-AUC=0.6483
+    Run 3 | Epoch 14/20 | Loss=0.0843 | Val ROC-AUC=0.8496 | Val PR-AUC=0.6425
+    Run 3 | Epoch 15/20 | Loss=0.0852 | Val ROC-AUC=0.8492 | Val PR-AUC=0.6564
+    Run 3 | Epoch 16/20 | Loss=0.0726 | Val ROC-AUC=0.8529 | Val PR-AUC=0.6449
+    Run 3 | Epoch 17/20 | Loss=0.0616 | Val ROC-AUC=0.8477 | Val PR-AUC=0.6404
+    Run 3 | Epoch 18/20 | Loss=0.0583 | Val ROC-AUC=0.8493 | Val PR-AUC=0.6416
+    Run 3 | Epoch 19/20 | Loss=0.0504 | Val ROC-AUC=0.8557 | Val PR-AUC=0.6392
+    Run 3 | Epoch 20/20 | Loss=0.0504 | Val ROC-AUC=0.8531 | Val PR-AUC=0.6434
+  → Run 3 TEST | ROC-AUC=0.8738 | PR-AUC=0.6741
+
+── Run 4/5 ──────────────────────────────
+    Run 4 | Epoch  1/20 | Loss=0.4686 | Val ROC-AUC=0.8734 | Val PR-AUC=0.6529
+    Run 4 | Epoch  2/20 | Loss=0.3573 | Val ROC-AUC=0.8810 | Val PR-AUC=0.6798
+    Run 4 | Epoch  3/20 | Loss=0.3141 | Val ROC-AUC=0.8754 | Val PR-AUC=0.6752
+    Run 4 | Epoch  4/20 | Loss=0.2949 | Val ROC-AUC=0.8770 | Val PR-AUC=0.6757
+    Run 4 | Epoch  5/20 | Loss=0.2699 | Val ROC-AUC=0.8707 | Val PR-AUC=0.6674
+    Run 4 | Epoch  6/20 | Loss=0.2319 | Val ROC-AUC=0.8727 | Val PR-AUC=0.6687
+    Run 4 | Epoch  7/20 | Loss=0.2221 | Val ROC-AUC=0.8701 | Val PR-AUC=0.6669
+    Run 4 | Epoch  8/20 | Loss=0.1966 | Val ROC-AUC=0.8661 | Val PR-AUC=0.6588
+    Run 4 | Epoch  9/20 | Loss=0.1759 | Val ROC-AUC=0.8653 | Val PR-AUC=0.6636
+    Run 4 | Epoch 10/20 | Loss=0.1513 | Val ROC-AUC=0.8601 | Val PR-AUC=0.6584
+    Run 4 | Epoch 11/20 | Loss=0.1310 | Val ROC-AUC=0.8587 | Val PR-AUC=0.6538
+    Run 4 | Epoch 12/20 | Loss=0.1177 | Val ROC-AUC=0.8594 | Val PR-AUC=0.6559
+    Run 4 | Epoch 13/20 | Loss=0.0983 | Val ROC-AUC=0.8520 | Val PR-AUC=0.6494
+    Run 4 | Epoch 14/20 | Loss=0.0950 | Val ROC-AUC=0.8526 | Val PR-AUC=0.6523
+    Run 4 | Epoch 15/20 | Loss=0.0811 | Val ROC-AUC=0.8546 | Val PR-AUC=0.6449
+    Run 4 | Epoch 16/20 | Loss=0.0688 | Val ROC-AUC=0.8526 | Val PR-AUC=0.6472
+    Run 4 | Epoch 17/20 | Loss=0.0612 | Val ROC-AUC=0.8537 | Val PR-AUC=0.6516
+    Run 4 | Epoch 18/20 | Loss=0.0630 | Val ROC-AUC=0.8586 | Val PR-AUC=0.6562
+    Run 4 | Epoch 19/20 | Loss=0.0577 | Val ROC-AUC=0.8509 | Val PR-AUC=0.6409
+    Run 4 | Epoch 20/20 | Loss=0.0434 | Val ROC-AUC=0.8511 | Val PR-AUC=0.6401
+  → Run 4 TEST | ROC-AUC=0.8730 | PR-AUC=0.6694
+
+── Run 5/5 ──────────────────────────────
+    Run 5 | Epoch  1/20 | Loss=0.4658 | Val ROC-AUC=0.8689 | Val PR-AUC=0.6436
+    Run 5 | Epoch  2/20 | Loss=0.3578 | Val ROC-AUC=0.8765 | Val PR-AUC=0.6671
+    Run 5 | Epoch  3/20 | Loss=0.3212 | Val ROC-AUC=0.8781 | Val PR-AUC=0.6644
+    Run 5 | Epoch  4/20 | Loss=0.2882 | Val ROC-AUC=0.8775 | Val PR-AUC=0.6725
+    Run 5 | Epoch  5/20 | Loss=0.2618 | Val ROC-AUC=0.8761 | Val PR-AUC=0.6588
+    Run 5 | Epoch  6/20 | Loss=0.2434 | Val ROC-AUC=0.8708 | Val PR-AUC=0.6625
+    Run 5 | Epoch  7/20 | Loss=0.2160 | Val ROC-AUC=0.8658 | Val PR-AUC=0.6592
+    Run 5 | Epoch  8/20 | Loss=0.1973 | Val ROC-AUC=0.8703 | Val PR-AUC=0.6597
+    Run 5 | Epoch  9/20 | Loss=0.1727 | Val ROC-AUC=0.8717 | Val PR-AUC=0.6614
+    Run 5 | Epoch 10/20 | Loss=0.1505 | Val ROC-AUC=0.8659 | Val PR-AUC=0.6561
+    Run 5 | Epoch 11/20 | Loss=0.1315 | Val ROC-AUC=0.8698 | Val PR-AUC=0.6607
+    Run 5 | Epoch 12/20 | Loss=0.1162 | Val ROC-AUC=0.8622 | Val PR-AUC=0.6563
+    Run 5 | Epoch 13/20 | Loss=0.1041 | Val ROC-AUC=0.8638 | Val PR-AUC=0.6602
+    Run 5 | Epoch 14/20 | Loss=0.0948 | Val ROC-AUC=0.8547 | Val PR-AUC=0.6487
+    Run 5 | Epoch 15/20 | Loss=0.0782 | Val ROC-AUC=0.8604 | Val PR-AUC=0.6493
+    Run 5 | Epoch 16/20 | Loss=0.0688 | Val ROC-AUC=0.8547 | Val PR-AUC=0.6501
+    Run 5 | Epoch 17/20 | Loss=0.0599 | Val ROC-AUC=0.8613 | Val PR-AUC=0.6500
+    Run 5 | Epoch 18/20 | Loss=0.0583 | Val ROC-AUC=0.8571 | Val PR-AUC=0.6511
+    Run 5 | Epoch 19/20 | Loss=0.0486 | Val ROC-AUC=0.8582 | Val PR-AUC=0.6581
+    Run 5 | Epoch 20/20 | Loss=0.0422 | Val ROC-AUC=0.8557 | Val PR-AUC=0.6494
+  → Run 5 TEST | ROC-AUC=0.8743 | PR-AUC=0.6779
+
+─────────────────────────────────────────────────────────────────
+FINAL  Diabetes
+  ROC-AUC : 0.8742 ± 0.0008
+  PR-AUC  : 0.6760 ± 0.0042
+─────────────────────────────────────────────────────────────────
+
+Results saved to /home/hy434/project/LLM_project_code/outputs_phecode/Diabetes_sbert_mlm_maskvisit_phecodegate_results.pkl
+
+=================================================================
+SUMMARY
+=================================================================
+Condition         ROC-AUC       PR-AUC
+────────────────────────────────────────
+SUD          0.9111±0.0027  0.7783±0.0036
+OUD          0.9559±0.0019  0.6867±0.0190
+Diabetes     0.8742±0.0008  0.6760±0.0042
+Done: variant=sbert_mlm_visit_phecodegate
