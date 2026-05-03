@@ -1,13 +1,13 @@
 """
 pretrain.py
 ===========
-Pretraining loop for Sent-e-Med.
+Pretraining loop
 
-Objectives (Section 4.2.2):
+Objectives:
   1. MLM  — Masked Language Modeling (always active)
   2. NVP  — Next Visit Prediction    (active when config.use_nvp=True)
 
-Training setup (Section 7.2):
+Training setup:
   - Optimizer: AdamW with weight decay
   - LR: 1e-5
   - Gradient clipping: max_norm=1.0
@@ -15,9 +15,6 @@ Training setup (Section 7.2):
 
 The best model (lowest validation loss) is saved to
     config.output_dir / checkpoint_name
-where checkpoint_name defaults to "pretrained_sent_e_med.pt" but can be
-overridden (e.g. "pretrained_sent_e_med_sbert_maskcode.pt") so that
-different encoder/masking variants don't overwrite each other's checkpoints.
 """
 
 from __future__ import annotations
