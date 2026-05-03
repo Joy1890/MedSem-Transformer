@@ -1,7 +1,5 @@
 """
-Sent-e-Med Architecture Diagram – v5
-Transformer merged into Token Representation column (vertical flow).
-All inter-section arrows share the same y level.
+Code for Model architecture diagram
 """
 
 import matplotlib
