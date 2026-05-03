@@ -13,10 +13,10 @@
 #   5. bio_clinical + mlm-only + code-level masking
 #   6. bio_clinical + mlm-only + visit-level masking
 
-MIMIC_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project"
-OUTPUT_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/outputs_new"
-LOG_DIR="/vast/palmer/scratch/wang_zuoheng/yc2256/update_logs"
-CODE_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/Project code" # adjust if needed
+MIMIC_DIR="/gpfs/gibbs/project/wan/yc22/LLM project"
+OUTPUT_DIR="/gpfs/gibbs/project/wan/yc22/LLM project/outputs_new"
+LOG_DIR="/vast/palmer/scratch/wan/yc22/update_logs"
+CODE_DIR="/gpfs/gibbs/project/wan/yc22/LLM project/Project code" # adjust if needed
 
 # Make log dir in case it doesn't exist yet
 mkdir -p "$LOG_DIR"
