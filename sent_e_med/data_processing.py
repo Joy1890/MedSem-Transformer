@@ -1,8 +1,7 @@
 """
 data_processing.py
 ==================
-MIMIC-IV data loading and preprocessing for Sent-e-Med.
-
+MIMIC-IV data loading and preprocessing
 Pipeline:
   1. load_mimic_data()           — load admissions + diagnoses tables
   2. build_patient_sequences()   — chronological visit sequences per patient
