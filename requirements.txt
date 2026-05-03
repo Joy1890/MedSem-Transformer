@@ -1,4 +1,4 @@
-# Sent-e-Med Requirements
+# MedSem-Transformer Requirements
 # Install with: pip install -r requirements.txt
 
 # Core deep learning
