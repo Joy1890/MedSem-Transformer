@@ -4,8 +4,7 @@ sbert_utils.py
 Pre-compute and cache frozen text embeddings for all ICD codes.
 
 Two encoders are supported (controlled by config.encoder_type):
-
-  "sbert" (original paper):
+  "sbert":
     sentence-transformers all-MiniLM-L6-v2 → 384-dim sentence embedding.
     Called via build_sbert_embeddings().
 
