@@ -1,6 +1,6 @@
 #!/bin/bash
 # submit_all.sh
-# Submits 6 independent SLURM jobs, one per Sent-e-Med variant.
+# Submits 6 independent SLURM jobs, one per variant.
 #
 # Usage:
 #   bash submit_all.sh
