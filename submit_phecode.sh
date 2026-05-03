@@ -10,11 +10,11 @@
 #   1. sbert + mlm-only + visit masking + PheCode concat fusion
 #   2. sbert + mlm-only + visit masking + PheCode gate fusion
 
-MIMIC_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project"
-OUTPUT_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/outputs_new"
-LOG_DIR="/vast/palmer/scratch/wang_zuoheng/yc2256/update_logs"
-CODE_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/Project code"
-PHECODE_MAP="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/Project code/phecodes_cm_rolled.csv"
+MIMIC_DIR="/gpfs/gibbs/project/wan/yc22/LLM project"
+OUTPUT_DIR="/gpfs/gibbs/project/wan/yc22/LLM project/outputs_new"
+LOG_DIR="/vast/palmer/scratch/wan/yc22/update_logs"
+CODE_DIR="/gpfs/gibbs/project/wan/yc22/LLM project/Project code"
+PHECODE_MAP="/gpfs/gibbs/project/wan/yc22/LLM project/Project code/phecodes_cm_rolled.csv"
 
 mkdir -p "$LOG_DIR"
 
