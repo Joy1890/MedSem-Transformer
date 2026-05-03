@@ -1,7 +1,7 @@
 """
 phecode_utils.py
 ================
-PheCode dual-embedding support for Sent-e-Med.
+PheCode dual-embedding support
 
 PheCode groups thousands of ICD codes into ~1,800 clinically meaningful
 phenotypes.  Each code gets a coarse-grained text label ("Alcohol-related
