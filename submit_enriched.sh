@@ -11,10 +11,10 @@
 #   and saves the result to output_dir/enriched_descriptions.json.
 #   All subsequent runs load from that cache with no API calls.
 
-MIMIC_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project"
-OUTPUT_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/outputs_new"
-LOG_DIR="/vast/palmer/scratch/wang_zuoheng/yc2256/update_logs"
-CODE_DIR="/gpfs/gibbs/project/wang_zuoheng/yc2256/LLM project/Project code"
+MIMIC_DIR="/gpfs/gibbs/project/wan/yc22/LLM project"
+OUTPUT_DIR="/gpfs/gibbs/project/wan/yc22/LLM project/outputs_new"
+LOG_DIR="/vast/palmer/scratch/wan/yc22/update_logs"
+CODE_DIR="/gpfs/gibbs/project/wan/yc22/LLM project/Project code"
 
 mkdir -p "$LOG_DIR"
 
